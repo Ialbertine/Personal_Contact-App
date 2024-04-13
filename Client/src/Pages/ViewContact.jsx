@@ -1,9 +1,10 @@
 import React from 'react'
+import { AiOutlineEdit } from "react-icons/ai";
 
 const ViewContact = () => {
   return (
     <div className="flex flex-col items-center justify-between w-[26rem] h-[70%] bg-gray-200 rounded-lg p-6">
-      <div className=''>
+      <div className="">
         <h2>View Contact</h2>
         <p className="w-[80%]">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum rem
@@ -23,6 +24,11 @@ const ViewContact = () => {
         <h2>Name: {contact.fullName}</h2>
         <h2>Email: {contact.phone}</h2>
         <h2>Phone: {contact.email}</h2>
+      </div>
+      <div>
+        <Link to={`/contacts/edit/${contact.id}`} className="mr-2">
+          <AiOutlineEdit className="text-[#794eb8] text-3xl" />
+        </Link>
       </div>
     </div>
   );

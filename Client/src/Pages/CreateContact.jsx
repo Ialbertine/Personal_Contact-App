@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addcontact } from "../apis/contactFetch"; // Corrected import
 
 const CreateContact = () => {
   const navigate = useNavigate();
@@ -27,18 +28,30 @@ const CreateContact = () => {
       return;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
-      await addContactToAPI(contact); // Using the renamed function
-      setMessage({ type: "success", content: "Contact added successfully" });
-      setContact({ fullName: "", phone: "", email: "" });
-      navigate("/");
+      const response = await addcontact(contact); // Corrected function name
+      setLoading(false);
+      setMessage({
+        type: "success",
+        content: response,
+      });
+
+      setContact({
+        fullName: "",
+        phone: "",
+        email: "",
+      });
+
+      setTimeout(() => {
+        // Using react-router-dom
+        navigate("/");
+      }, 2000);
     } catch (error) {
       setMessage({
         type: "error",
-        content: error.message || "An error occurred",
+        content: error.message,
       });
-    } finally {
       setLoading(false);
     }
   };
