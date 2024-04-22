@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FetchContacts } from "../apis/contactFetch"; // Import FetchContacts function
+import { FetchContacts, DeleteContact } from "../apis/contactFetch";
+
 import ContactList from "../components/ContactList";
 
 const Home = () => {
@@ -22,6 +23,18 @@ const Home = () => {
         console.log(err);
       });
   }, []);
+
+  const handleDeleteContact = async (id) => {
+    try {
+      await DeleteContact(id);
+      setContacts((prevContacts) =>
+        prevContacts.filter((contact) => contact.id !== id)
+      );
+      console.log("Contact deleted successfully.");
+    } catch (err) {
+      console.log("Error deleting contact:", err);
+    }
+  };
   return (
     <div className="p-10 bg-[gray]">
       <div className="flex justify-between px-[5rem]">
@@ -52,10 +65,14 @@ const Home = () => {
           </button>
         </Link>
       </div>
-      <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3 ">
         {contacts &&
           contacts.map((contact) => (
-            <ContactList key={contact._id} contact={contact} />
+            <ContactList
+              key={contact._id}
+              contact={contact}
+              clickDelete={handleDeleteContact}
+            />
           ))}
       </div>
     </div>

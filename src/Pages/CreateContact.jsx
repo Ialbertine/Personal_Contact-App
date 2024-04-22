@@ -1,41 +1,65 @@
-import React from 'react'
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addContact } from "../apis/contactFetch";// Corrected import
 
+const CreateContact = () => {
+  const navigate = useNavigate();
+  const [message, setMessage] = useState({ type: "", content: "" });
+  const [loading, setLoading] = useState(false);
+  const [contact, setContact] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+  });
 
-const UpdateContact = () => {
-      const navigate = useNavigate(); // Initialize useNavigate hook
-      const [contact, setContact] = useState({
-        fullName: "",
-        email: "",
-        phone: "",
+  const handleInput = (event) => {
+    const { name, value } = event.target;
+    setContact((prevContact) => ({
+      ...prevContact,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitContact = async (event) => {
+    event.preventDefault();
+
+    if (!contact.fullName || !contact.email || !contact.phone) {
+      setMessage({ type: "error", content: "All fields are required" });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Corrected function name to addContact
+      const response = await addContact(contact);
+      setLoading(false);
+      setMessage({
+        type: "success",
+        content: response,
       });
-      const [loading, setLoading] = useState(false);
 
-      const handleInput = (e) => {
-        const { name, value } = e.target;
-        setContact((prevContact) => ({
-          ...prevContact,
-          [name]: value,
-        }));
-      };
+      setContact({
+        fullName: "",
+        phone: "",
+        email: "",
+      });
 
-      const handleSubmitContact = (e) => {
-        e.preventDefault();
-        setLoading(true); // Set loading state to true while processing
-
-        // Simulating an API call (remove this in your actual code)
-        setTimeout(() => {
-          setLoading(false); // Set loading state to false after processing
-          // Redirect to another page after updating the contact
-          navigate("/updated"); // Use navigate instead of history.push
-        }, 2000); // Simulating a delay of 2 seconds
-      };
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      setMessage({
+        type: "error",
+        content: error.message,
+      });
+      setLoading(false);
+    }
+  };
   return (
-    <div className="flex flex-col h-screen">
+    <div class="flex flex-col h-screen bg-[gray]">
       <div className="pl-[10rem] mt-[5rem] lg:ml-[10rem]">
         <h2 className="text-3xl font-bold">
-          Edit <span className="text-[#9034e6]">Contact</span>
+          Add <span className="text-[#9034e6]">Contact</span>
         </h2>
         <p class="w-[80%] pt-4">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum rem
@@ -76,14 +100,14 @@ const UpdateContact = () => {
             placeholder="Enter phone number"
           />
         </div>
-        <div className="flex items-center justify-between">
+        <div class="flex items-center justify-between">
           <button
             type="submit"
             disabled={loading}
-            className="inline-block rounded-lg bg-[#8549ba] hover:bg-[#3e0c78] px-5 py-3 text-sm font-medium text-white"
+            class="inline-block rounded-lg bg-[#8549ba] hover:bg-[#3e0c78] px-5 py-3 text-sm font-medium text-white"
           >
             {loading && "loading...🐥"}
-            {!loading && "Update"}
+            {!loading && "Add contact"}
           </button>
         </div>
       </form>
@@ -91,4 +115,4 @@ const UpdateContact = () => {
   );
 };
 
-export default UpdateContact;
+export default CreateContact;

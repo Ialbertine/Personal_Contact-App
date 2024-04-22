@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { CiViewList } from "react-icons/ci";
-
 import { BsFillTrash3Fill } from "react-icons/bs";
 
 const ContactList = ({ contact, clickDelete }) => {
+   const handleDelete = () => {
+    clickDelete(contact.id);
+   };
+
   return (
     <div className="w-[90%] lg:w-[70%] bg-[#100d13] text-[white] rounded-lg p-4 justify-center items-center lg:ml-[4rem]">
       {/* Image */}
@@ -39,7 +42,7 @@ const ContactList = ({ contact, clickDelete }) => {
           </Link>
         </div>
         <div>
-          <button className="" onClick={() => clickDelete(contact.id)}>
+          <button className="" onClick={handleDelete}>
             <BsFillTrash3Fill className="text-[#794eb8] text-3xl" />
           </button>
         </div>
